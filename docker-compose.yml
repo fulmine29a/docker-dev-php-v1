@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+
+  dns-passthru:
+    build:
+      context: .
+      dockerfile: ./dns-passthru/Dockerfile
+    networks:
+      - dev
+      
+networks:
+  dev:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 192.168.10.0/24
+        gateway: 192.168.10.1
