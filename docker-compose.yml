@@ -2,13 +2,37 @@ version: '2'
 
 services:
 
+  nginx:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    networks:
+      - dev
+    volumes:
+      - site:/www/
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+
   dns-passthru:
     build:
       context: .
       dockerfile: ./dns-passthru/Dockerfile
     networks:
-      - dev
-      
+      dev:
+        ipv4_address: 192.168.10.2
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+
+volumes:
+  site:
+    driver: "local"
+    driver_opts:
+      type: none
+      device: ${SITE_PATH}
+      o: bind
+
 networks:
   dev:
     driver: bridge
