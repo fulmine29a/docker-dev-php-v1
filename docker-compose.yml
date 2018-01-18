@@ -7,7 +7,8 @@ services:
       context: .
       dockerfile: ./nginx/Dockerfile
     networks:
-      - dev
+      dev:
+          ipv4_address: 192.168.10.2
     volumes:
       - site:/www/
     links:
@@ -28,16 +29,16 @@ services:
     stdin_open: true
     restart: unless-stopped
 
-  dns-passthru:
-    build:
-      context: .
-      dockerfile: ./dns-passthru/Dockerfile
-    networks:
-      dev:
-        ipv4_address: 192.168.10.2
-    tty: true
-    stdin_open: true
-    restart: unless-stopped
+#  dns-passthru:
+#    build:
+#      context: .
+#      dockerfile: ./dns-passthru/Dockerfile
+#    networks:
+#      dev:
+#        ipv4_address: 192.168.10.2
+#    tty: true
+#    stdin_open: true
+#    restart: unless-stopped
 
 volumes:
   site:
