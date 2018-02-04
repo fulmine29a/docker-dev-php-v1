@@ -2,17 +2,15 @@ version: '2'
 
 services:
 
-  nginx:
+  nginx-php:
     build:
       context: .
       dockerfile: ./nginx/Dockerfile
     networks:
       dev:
-          ipv4_address: 192.168.10.2
+          ipv4_address: ${NGINX_IP}
     volumes:
       - site:/www/
-    links:
-      - php-fpm
     tty: true
     stdin_open: true
     restart: unless-stopped
@@ -29,30 +27,52 @@ services:
     stdin_open: true
     restart: unless-stopped
 
-#  dns-passthru:
-#    build:
-#      context: .
-#      dockerfile: ./dns-passthru/Dockerfile
-#    networks:
-#      dev:
-#        ipv4_address: 192.168.10.2
-#    tty: true
-#    stdin_open: true
-#    restart: unless-stopped
+  php-56:
+    build:
+      context: .
+      dockerfile: ./php-56/Dockerfile
+    networks:
+      - dev
+    volumes:
+      - site:/www/
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
 
-volumes:
-  site:
-    driver: "local"
-    driver_opts:
-      type: none
-      device: ${SITE_PATH}
-      o: bind
+  mysql:
+    build:
+      context: .
+      dockerfile: ./mysql/Dockerfile
+    networks:
+      - dev
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
 
-networks:
-  dev:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 192.168.10.0/24
-        gateway: 192.168.10.1
+  dns-passthru:
+    build:
+      context: .
+      dockerfile: ./dns-passthru/Dockerfile
+    networks:
+      dev:
+        ipv4_address: 192.168.10.2
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+
+#volumes:
+#  site:
+#    driver: "local"
+#    driver_opts:
+#      type: none
+#      device: ${SITE_PATH}
+#      o: bind
+#
+#networks:
+#  dev:
+#    driver: bridge
+#    ipam:
+#      driver: default
+#      config:
+#      - subnet: 192.168.10.0/24
+#        gateway: 192.168.10.1
