@@ -35,6 +35,9 @@ services:
       - dev
     volumes:
       - site:/www/
+    environment:
+      - SITE_NAME=${SITE_NAME}
+      - NGINX_IP=${NGINX_IP}
     tty: true
     stdin_open: true
     restart: unless-stopped
@@ -43,6 +46,16 @@ services:
     build:
       context: .
       dockerfile: ./mysql/Dockerfile
+    networks:
+      - dev
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+
+  memcache:
+    build:
+      context: .
+      dockerfile: ./memcache/Dockerfile
     networks:
       - dev
     tty: true

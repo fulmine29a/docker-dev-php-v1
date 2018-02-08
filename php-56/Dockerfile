@@ -6,6 +6,6 @@ RUN apt-get clean
 RUN addgroup --gid 1000 dev
 RUN adduser --uid 1000 --gid 1000 dev
 EXPOSE 9000
-RUN rm -rf /etc/php5
+#RUN rm -rf /etc/php5
 ADD ./etc/php5/ /etc/php5/
-CMD service php5-fpm start && bash
+CMD echo $NGINX_IP $SITE_NAME >> /etc/hosts && service php5-fpm start && bash
